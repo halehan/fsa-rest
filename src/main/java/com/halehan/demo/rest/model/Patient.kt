@@ -1,69 +1,24 @@
-package com.halehan.demo.rest.model;
+package com.halehan.demo.rest.model
 
-import javax.persistence.*;
-
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
 @Entity // This tells Hibernate to make a table out of this class
-public class Patient {
+class Patient {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Int? = null
+    var studyid: Int? = null
+    var firstname: String? = null
+    var lastname: String? = null
+        private set
+    var email: String? = null
+    var status: String? = null
 
-    private Integer studyid;
-
-    private String firstname;
-
-    private String lastname;
-
-    private String email;
-
-    private String status;
-
-    public Integer getId() {
-        return id;
+    fun setLastName(lastName: String?) {
+        lastname = lastName
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getStudyid() {
-        return studyid;
-    }
-
-    public void setStudyid(Integer studyid) {
-        this.studyid = studyid;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastname = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }
