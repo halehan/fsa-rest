@@ -17,7 +17,7 @@ public class MainController {
     public @ResponseBody int addNewUser (@RequestBody Patient newPatient) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-
+System.out.println("In the add");
         Patient p = new Patient();
         p.setStudyid(newPatient.getStudyid());
         p.setFirstname(newPatient.getFirstname());
