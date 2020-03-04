@@ -6,10 +6,14 @@ import javax.persistence.*;
 @Entity // This tells Hibernate to make a table out of this class
 public class Patient {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     private Integer studyid;
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
     private String firstname;
 
@@ -18,6 +22,16 @@ public class Patient {
     private String email;
 
     private String status;
+
+    private String studyeye;
+
+    public String getStudyeye() {
+        return studyeye;
+    }
+
+    public void setStudyeye(String studyeye) {
+        this.studyeye = studyeye;
+    }
 
     public Integer getId() {
         return id;
