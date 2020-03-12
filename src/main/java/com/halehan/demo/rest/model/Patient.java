@@ -11,10 +11,6 @@ public class Patient {
 
     private Integer studyid;
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     private String firstname;
 
     private String lastname;
@@ -61,8 +57,8 @@ public class Patient {
         return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastname = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
