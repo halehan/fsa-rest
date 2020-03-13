@@ -1,10 +1,14 @@
 package com.halehan.demo.rest.controller;
 
         import com.halehan.demo.rest.model.Patient;
+        import com.halehan.demo.rest.model.PatientDTO;
         import com.halehan.demo.rest.service.PatientServiceImpl;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Controller;
         import org.springframework.web.bind.annotation.*;
+
+        import java.util.List;
+        import java.util.Optional;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/patient") // This means URL's start with /demo (after Application path)
@@ -16,19 +20,21 @@ public class MainController {
     private PatientServiceImpl patientService;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
-    public @ResponseBody String addNewUser (@RequestBody Patient newPatient) {
+    public @ResponseBody String addNewUser (@RequestBody PatientDTO newPatient) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestBody means it is in the body from the POST request
         return patientService.addPatient(newPatient);
     }
 
     @GetMapping(path="/all")
-    public @ResponseBody Iterable<Patient> getAllUsers() {
+    public @ResponseBody
+    List<PatientDTO> getAllUsers() {
        return  patientService.getAllPatients();
     }
 
     @GetMapping(path="/lastName/{lastName}")
-    public @ResponseBody Iterable<Patient> getByLastName(@PathVariable String lastName) {
+    public @ResponseBody
+    List<PatientDTO> getByLastName(@PathVariable String lastName) {
         return  patientService.findByLastName(lastName);
     }
 
@@ -38,7 +44,7 @@ public class MainController {
     }
 
     @PutMapping("/{id}")
-    public @ResponseBody String updateStudent(@RequestBody Patient p, @PathVariable long id) {
+    public @ResponseBody String updateStudent(@RequestBody PatientDTO p, @PathVariable long id) {
         return patientService.updatePatient(p, Math.toIntExact(id));
     }
 

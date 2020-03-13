@@ -1,16 +1,30 @@
 package com.halehan.demo.rest.service;
 
+import com.halehan.demo.rest.controller.mongo.ct.ProcedureController;
+import com.halehan.demo.rest.model.DtoMapper;
 import com.halehan.demo.rest.model.Patient;
 import com.halehan.demo.rest.model.PatientCrudRepository;
+import com.halehan.demo.rest.model.PatientDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PatientServiceImpl implements PatientService{
+
+    Logger logger = LoggerFactory.getLogger(PatientServiceImpl.class);
+
+    @Autowired
+    DtoMapper dtoMapper;
 
     @Autowired
     // This means to get the bean called patientRepository
@@ -19,7 +33,7 @@ public class PatientServiceImpl implements PatientService{
 
     @Transactional
     @Override
-    public String updatePatient(Patient p, int id) {
+    public String updatePatient(PatientDTO p, int id) {
 
         Optional<Patient> patientOptional = patientRepository.findById(id);
         String rtn = "Success";
@@ -32,14 +46,14 @@ public class PatientServiceImpl implements PatientService{
                 System.out.println("User's name = " + patient.getEmail());
                 if (checkedValue(p.getEmail()))
                     patient.setEmail(p.getEmail());
-                if (checkedValue(p.getFirstname()))
-                    patient.setFirstname(p.getFirstname());
-                if (checkedValue(p.getLastname()))
-                    patient.setLastname(p.getLastname());
+                if (checkedValue(p.getFirstName()))
+                    patient.setFirstname(p.getFirstName());
+                if (checkedValue(p.getLastName()))
+                    patient.setLastname(p.getLastName());
                 if (checkedValue(p.getStatus()))
                     patient.setStatus(p.getStatus());
-                if (checkedValue(p.getStudyeye()))
-                    patient.setStudyeye(p.getStudyeye());
+                if (checkedValue(p.getStudyEye()))
+                    patient.setStudyeye(p.getStudyEye());
 
                 patient.setId(Math.toIntExact(id));
 
@@ -55,13 +69,15 @@ public class PatientServiceImpl implements PatientService{
 
     }
 
-    public String addPatient(Patient newPatient) {
+    public String addPatient(PatientDTO newPatient) {
 
-        System.out.println("/add Post " + newPatient.getEmail() +"\n" + newPatient.getLastname());
+        System.out.println("/add Post " + newPatient.getEmail() +"\n" + newPatient.getLastName());
         Patient p = new Patient();
-        p.setStudyid(newPatient.getStudyid());
-        p.setFirstname(newPatient.getFirstname());
-        p.setLastname(newPatient.getLastname());
+        p.setStudyeye(newPatient.getStudyEye());
+        p.setStatus(newPatient.getStatus());
+        p.setStudyid(newPatient.getStudyId());
+        p.setFirstname(newPatient.getFirstName());
+        p.setLastname(newPatient.getLastName());
         p.setEmail(newPatient.getEmail());
         String rtn = "Success: ";
         try{
@@ -73,17 +89,29 @@ public class PatientServiceImpl implements PatientService{
         return rtn;
     }
 
-    public Iterable<Patient> findByLastName(String lastName) {
-        return patientRepository.findByLastname(lastName);
+    public List<PatientDTO> findByLastName(String lastName) {
+
+        return  patientRepository.findByLastname(lastName).stream()
+                .sorted(Comparator.comparing(Patient::getStudyeye).thenComparing(Patient::getLastname))
+                .map(dtoMapper::mapPatientDto).collect(Collectors.toList());
+
+      //  return patientRepository.findByLastname(lastName);
     }
 
-    public  Iterable<Patient>  getAllPatients() {
-        Iterable<Patient> patients = null;
+    public List<PatientDTO> getAllPatients() {
 
-        try {patients = patientRepository.findAll();}
-        catch (Exception e) { }
+      return  ((List<Patient>) patientRepository.findAll()).stream()
+              .sorted(Comparator.comparing(Patient::getStudyeye).thenComparing(Patient::getLastname))
+              .map(dtoMapper::mapPatientDto).collect(Collectors.toList());
 
-        return patients;
+     /*   List<Patient> sorted = ((List<Patient>) patientRepository.findAll()).stream()
+                .sorted(Comparator.comparing(Patient::getStudyeye).thenComparing(Patient::getLastname))
+                .collect(Collectors.toList());
+
+           sorted.forEach(System.out::println); */
+
+
+     //   return sorted;
     }
 
     public String deletePatient(int id) {

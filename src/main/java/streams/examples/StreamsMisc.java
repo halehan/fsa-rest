@@ -2,17 +2,97 @@ package streams.examples;
 
 import org.apache.tomcat.util.http.fileupload.util.Streams;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StreamsMisc {
 
+    class Student {
+
+        private String name;
+        private Set<String> book;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Set<String> getBook() {
+            return book;
+        }
+
+        public void setBook(Set<String> book) {
+            this.book = book;
+        }
+
+        public void addBook(String book) {
+            if (this.book == null) {
+                this.book = new HashSet<>();
+            }
+            this.book.add(book);
+        }
+        //getters and setters
+
+    }
+
     public static void main(String[] args) {
         StreamsMisc sm = new StreamsMisc();
-        sm.streamsRunnable();
+    //    sm.streamsRunnable();
+        sm.flatMapExample();
+    }
+
+    private void flatMapExample() {
+
+        Student obj1 = new Student();
+        obj1.setName("mkyong");
+        obj1.addBook("Java 8 in Action");
+        obj1.addBook("Spring Boot in Action");
+        obj1.addBook("Effective Java (2nd Edition)");
+
+        Student obj2 = new Student();
+        obj2.setName("zilap");
+        obj2.addBook("Learning Python, 5th Edition");
+        obj2.addBook("Effective Java (2nd Edition)");
+
+        List<Student> list = new ArrayList<>();
+        list.add(obj1);
+        list.add(obj2);
+
+
+        List<String> collect =
+                list.stream()
+                        .map(x -> x.getBook())      //Stream<Set<String>>
+                        .flatMap(x -> x.stream())   //Stream<String>
+                        .distinct()
+                        .collect(Collectors.toList());
+
+        collect.forEach(x -> System.out.println("flatMap " + x));
+
+        Stream<Set> collectMap =
+                list.stream()
+                        .map(x -> x.getBook());
+
+        collect.forEach(x -> System.out.println("map  " +x));
+
+        String[][] data = new String[][]{{"a", "b"}, {"c", "d"}, {"e", "f"}};
+
+        Map<String, List<String>> people = new HashMap<>();
+        people.put("John", Arrays.asList("555-1123", "555-3389"));
+        people.put("Mary", Arrays.asList("555-2243", "555-5264"));
+        people.put("Steve", Arrays.asList("555-6654", "555-3242"));
+
+        List<String> phones = people.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        for(String ph : phones) {
+            System.out.println(ph);
+        }
+
     }
 
     private void streamsRunnable() {
